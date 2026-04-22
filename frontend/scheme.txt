@@ -1,0 +1,15 @@
+src/
+  hooks/
+    useTransactions.js       ← new
+  components/
+    TransactionForm.js       ← new
+    TransactionForm.css      ← new
+    TransactionList.js       ← new
+    TransactionList.css      ← new
+    SummaryCards.js          ← new
+    SummaryCards.css         ← new
+    SpendingChart.js         ← new
+    SpendingChart.css        ← new
+  pages/
+    Dashboard.js             ← replace existing
+    Dashboard.css            ← replace existing

@@ -1,0 +1,40 @@
+.chart-wrap {
+  padding: 0.25rem 0;
+}
+
+.chart-section-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.75rem;
+}
+
+.chart-tooltip {
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8125rem;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.chart-tooltip-label {
+  color: #aaa;
+  margin: 0 0 2px;
+  font-size: 0.75rem;
+}
+
+.chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #bbb;
+  text-align: center;
+}

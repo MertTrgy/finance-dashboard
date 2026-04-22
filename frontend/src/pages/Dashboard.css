@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap');
+
+.dashboard {
+  min-height: 100vh;
+  background: #f5f4f0;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ── Header ── */
+.dash-header {
+  background: #fff;
+  border-bottom: 1px solid #e8e6e1;
+  padding: 0 2rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dash-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem;
+  color: #1a1a1a;
+  letter-spacing: -0.5px;
+}
+
+.dash-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dash-username {
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.logout-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #666;
+  background: none;
+  border: 1px solid #e2e0da;
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.logout-btn:hover { border-color: #1a1a1a; color: #1a1a1a; }
+
+/* ── Main ── */
+.dash-main {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Month nav + Add button ── */
+.dash-month-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dash-month-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.month-btn {
+  background: none;
+  border: 1px solid #e2e0da;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  font-size: 1.1rem;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s;
+}
+.month-btn:hover:not(:disabled) { border-color: #1a1a1a; color: #1a1a1a; }
+.month-btn:disabled { opacity: 0.3; cursor: default; }
+
+.month-label {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem;
+  color: #1a1a1a;
+  letter-spacing: -0.3px;
+  min-width: 180px;
+}
+
+.add-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  background: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.125rem;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.add-btn:hover { background: #2d2d2d; }
+.add-btn:active { transform: scale(0.98); }
+
+/* ── Two-column grid ── */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .dash-grid { grid-template-columns: 1fr; }
+}
+
+.dash-card {
+  background: #fff;
+  border: 1px solid #f0ede8;
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin: 0 0 1.25rem;
+  letter-spacing: -0.3px;
+}
