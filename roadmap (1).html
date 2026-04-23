@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Finance Dashboard — Project Roadmap</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f4f0;
+    color: #1a1a1a;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  .container { max-width: 680px; margin: 0 auto; }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.75rem;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.375rem;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+    color: #888;
+    margin-bottom: 0.875rem;
+  }
+
+  .stack-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .pill {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    border: 1px solid #ddd;
+    color: #666;
+    background: #fff;
+  }
+
+  .phase {
+    background: #fff;
+    border: 1px solid #ece9e3;
+    border-radius: 14px;
+    padding: 1.125rem 1.25rem;
+    margin-bottom: 10px;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .b-done    { background: #EAF3DE; color: #3B6D11; }
+  .b-today   { background: #E1F5EE; color: #0F6E56; }
+  .b-next    { background: #FAEEDA; color: #854F0B; }
+  .b-later   { background: #EEEDFE; color: #3C3489; }
+  .b-stretch { background: #F1EFE8; color: #5F5E5A; }
+
+  .phase-title {
+    font-size: 15px;
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .done-chip {
+    font-size: 11px;
+    color: #3B6D11;
+    background: #EAF3DE;
+    padding: 2px 8px;
+    border-radius: 99px;
+  }
+
+  ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+
+  li {
+    font-size: 13px;
+    color: #555;
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .dot-done { background: #3B6D11; }
+  .dot-todo { background: #d1cdc6; }
+
+  .ask-btn {
+    margin-top: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #1a1a1a;
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 5px 12px;
+    cursor: pointer;
+    display: inline-block;
+    transition: border-color 0.15s;
+  }
+  .ask-btn:hover { border-color: #1a1a1a; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Finance dashboard</h1>
+  <p class="subtitle">Personal full-stack project — React + Django</p>
+  <div class="stack-row">
+    <span class="pill">React + JS</span>
+    <span class="pill">Django REST Framework</span>
+    <span class="pill">SQLite → Postgres</span>
+    <span class="pill">JWT auth</span>
+    <span class="pill">Recharts</span>
+  </div>
+
+  <!-- Day 1 -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="badge b-done">Day 1 — done</span>
+      <span class="phase-title">Setup, auth &amp; scaffold</span>
+      <span class="done-chip">✓ complete</span>
+    </div>
+    <ul>
+      <li><span class="dot dot-done"></span>Django project + DRF + JWT + CORS configured</li>
+      <li><span class="dot dot-done"></span>Category &amp; Transaction models with migrations</li>
+      <li><span class="dot dot-done"></span>Auth endpoints — register, login, refresh, /me</li>
+      <li><span class="dot dot-done"></span>React app — AuthContext, Axios interceptors, protected routes</li>
+      <li><span class="dot dot-done"></span>Login &amp; Register pages wired to Django</li>
+    </ul>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="badge b-today">Day 2 — in progress</span>
+      <span class="phase-title">Transactions CRUD &amp; dashboard charts</span>
+    </div>
+    <ul>
+      <li><span class="dot dot-done"></span>useTransactions hook — fetch, add, delete</li>
+      <li><span class="dot dot-done"></span>TransactionForm modal — type toggle, category picker, amount</li>
+      <li><span class="dot dot-done"></span>TransactionList — rows with delete, loading skeletons</li>
+      <li><span class="dot dot-done"></span>SummaryCards — income / expenses / balance</li>
+      <li><span class="dot dot-done"></span>SpendingChart — overview bar + by-category bar</li>
+      <li><span class="dot dot-done"></span>Month navigator — browse past months</li>
+    </ul>
+  </div>
+
+  <!-- Day 3 -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="badge b-next">Day 3 — next</span>
+      <span class="phase-title">Budget goals &amp; categories UI</span>
+    </div>
+    <ul>
+      <li><span class="dot dot-todo"></span>Categories management page — create / delete in-app</li>
+      <li><span class="dot dot-todo"></span>Budget model in Django — monthly spend limit per category</li>
+      <li><span class="dot dot-todo"></span>Over-budget flag on the API summary endpoint</li>
+      <li><span class="dot dot-todo"></span>Toast notification when a category is over budget</li>
+      <li><span class="dot dot-todo"></span>CSV export endpoint in Django + download button in UI</li>
+    </ul>
+  </div>
+
+  <!-- Day 4 -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="badge b-later">Day 4</span>
+      <span class="phase-title">Polish &amp; responsive layout</span>
+    </div>
+    <ul>
+      <li><span class="dot dot-todo"></span>Responsive layout — mobile-friendly dashboard</li>
+      <li><span class="dot dot-todo"></span>Edit transaction — click a row to update it</li>
+      <li><span class="dot dot-todo"></span>Error boundary — graceful error states</li>
+      <li><span class="dot dot-todo"></span>Pie chart for category breakdown</li>
+      <li><span class="dot dot-todo"></span>Loading skeletons on all data-fetching states</li>
+    </ul>
+  </div>
+
+  <!-- Stretch -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="badge b-stretch">Stretch goals</span>
+      <span class="phase-title">When you want more</span>
+    </div>
+    <ul>
+      <li><span class="dot dot-todo"></span>Switch SQLite → PostgreSQL + deploy on Railway / Render</li>
+      <li><span class="dot dot-todo"></span>Deploy React on Vercel, point API_URL to production</li>
+      <li><span class="dot dot-todo"></span>Recurring transactions — weekly / monthly auto-entries</li>
+      <li><span class="dot dot-todo"></span>Multi-currency support with live exchange rates</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
