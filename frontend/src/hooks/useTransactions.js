@@ -3,8 +3,8 @@ import api from '../services/api';
 
 export function useTransactions(month) {
   const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading]           = useState(true);
+  const [error, setError]               = useState(null);
 
   const fetch = useCallback(async () => {
     setLoading(true);
@@ -28,12 +28,18 @@ export function useTransactions(month) {
     return data;
   };
 
+  const editTransaction = async (id, payload) => {
+    const { data } = await api.patch(`/transactions/${id}/`, payload);
+    setTransactions((prev) => prev.map((t) => (t.id === id ? data : t)));
+    return data;
+  };
+
   const deleteTransaction = async (id) => {
     await api.delete(`/transactions/${id}/`);
     setTransactions((prev) => prev.filter((t) => t.id !== id));
   };
 
-  return { transactions, loading, error, refetch: fetch, addTransaction, deleteTransaction };
+  return { transactions, loading, error, refetch: fetch, addTransaction, editTransaction, deleteTransaction };
 }
 
 export function useCategories() {
@@ -51,7 +57,6 @@ export function useCategories() {
     return data;
   };
 
-  // PATCH — update name or color of an existing category
   const updateCategory = async (id, payload) => {
     const { data } = await api.patch(`/categories/${id}/`, payload);
     setCategories((prev) => prev.map((c) => (c.id === id ? data : c)));

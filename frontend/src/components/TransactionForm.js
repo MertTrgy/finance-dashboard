@@ -3,13 +3,15 @@ import './TransactionForm.css';
 
 const today = () => new Date().toISOString().split('T')[0];
 
-export default function TransactionForm({ categories, onAdd, onClose }) {
+export default function TransactionForm({ categories, onAdd, onEdit, onClose, transaction }) {
+  const isEditing = Boolean(transaction);
+
   const [form, setForm] = useState({
-    type: 'expense',
-    amount: '',
-    date: today(),
-    note: '',
-    category: '',
+    type:     transaction?.type     ?? 'expense',
+    amount:   transaction?.amount   ?? '',
+    date:     transaction?.date     ?? today(),
+    note:     transaction?.note     ?? '',
+    category: transaction?.category ?? '',
   });
   const [saving, setSaving] = useState(false);
   const [error, setError]   = useState('');
@@ -27,13 +29,18 @@ export default function TransactionForm({ categories, onAdd, onClose }) {
     }
     setSaving(true);
     try {
-      await onAdd({
+      const payload = {
         type:     form.type,
         amount:   parseFloat(form.amount).toFixed(2),
         date:     form.date,
         note:     form.note,
         category: form.category || null,
-      });
+      };
+      if (isEditing) {
+        await onEdit(transaction.id, payload);
+      } else {
+        await onAdd(payload);
+      }
       onClose();
     } catch (err) {
       const d = err.response?.data;
@@ -47,14 +54,15 @@ export default function TransactionForm({ categories, onAdd, onClose }) {
     <div className="tf-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="tf-modal">
         <div className="tf-header">
-          <span className="tf-title">New transaction</span>
+          <span className="tf-title">
+            {isEditing ? 'Edit transaction' : 'New transaction'}
+          </span>
           <button className="tf-close" onClick={onClose}>✕</button>
         </div>
 
         {error && <div className="tf-error">{error}</div>}
 
         <form onSubmit={handleSubmit} className="tf-form">
-          {/* Type toggle */}
           <div className="tf-toggle">
             {['expense', 'income'].map((t) => (
               <button
@@ -68,7 +76,6 @@ export default function TransactionForm({ categories, onAdd, onClose }) {
             ))}
           </div>
 
-          {/* Amount */}
           <div className="tf-field">
             <label>Amount (£)</label>
             <input
@@ -83,7 +90,6 @@ export default function TransactionForm({ categories, onAdd, onClose }) {
             />
           </div>
 
-          {/* Date */}
           <div className="tf-field">
             <label>Date</label>
             <input
@@ -94,24 +100,16 @@ export default function TransactionForm({ categories, onAdd, onClose }) {
             />
           </div>
 
-          {/* Category */}
           <div className="tf-field">
             <label>Category <span className="tf-optional">(optional)</span></label>
-            <select
-              value={form.category}
-              onChange={(e) => set('category', e.target.value)}
-            >
+            <select value={form.category} onChange={(e) => set('category', e.target.value)}>
               <option value="">No category</option>
               {filteredCats.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>
-            {filteredCats.length === 0 && (
-              <span className="tf-hint">No {form.type} categories yet — add some in Settings</span>
-            )}
           </div>
 
-          {/* Note */}
           <div className="tf-field">
             <label>Note <span className="tf-optional">(optional)</span></label>
             <input
@@ -130,7 +128,7 @@ export default function TransactionForm({ categories, onAdd, onClose }) {
               className={`tf-submit ${form.type}`}
               disabled={saving}
             >
-              {saving ? 'Saving…' : `Add ${form.type}`}
+              {saving ? 'Saving…' : isEditing ? 'Save changes' : `Add ${form.type}`}
             </button>
           </div>
         </form>

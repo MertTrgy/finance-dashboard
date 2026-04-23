@@ -6,6 +6,7 @@
   font-family: 'DM Sans', sans-serif;
 }
 
+/* ── Header ── */
 .dash-header {
   background: #fff;
   border-bottom: 1px solid #e8e6e1;
@@ -47,7 +48,7 @@
   margin-left: auto;
 }
 
-.dash-username { font-size: 0.875rem; color: #888; }
+.dash-username { font-size: 0.875rem; color: #aaa; }
 
 .logout-btn {
   font-family: 'DM Sans', sans-serif;
@@ -63,6 +64,7 @@
 }
 .logout-btn:hover { border-color: #1a1a1a; color: #1a1a1a; }
 
+/* ── Main layout ── */
 .dash-main {
   max-width: 1140px;
   margin: 0 auto;
@@ -72,6 +74,7 @@
   gap: 1.25rem;
 }
 
+/* ── Month row ── */
 .dash-month-row {
   display: flex;
   align-items: center;
@@ -80,11 +83,7 @@
   gap: 0.75rem;
 }
 
-.dash-month-nav {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+.dash-month-nav { display: flex; align-items: center; gap: 0.75rem; }
 
 .month-btn {
   background: none;
@@ -143,7 +142,7 @@
 .add-btn:hover  { background: #2d2d2d; }
 .add-btn:active { transform: scale(0.98); }
 
-/* Over-budget banner */
+/* ── Over-budget banner ── */
 .over-budget-banner {
   display: flex;
   align-items: flex-start;
@@ -155,6 +154,12 @@
   font-size: 0.875rem;
   color: #92400e;
   line-height: 1.5;
+  animation: fadein 0.3s ease;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .ob-icon {
@@ -172,17 +177,12 @@
   margin-top: 1px;
 }
 
-.over-budget-banner strong { font-weight: 500; }
-
+/* ── Cards grid ── */
 .dash-grid {
   display: grid;
   grid-template-columns: 1fr 1.3fr;
   gap: 1.25rem;
   align-items: start;
-}
-
-@media (max-width: 800px) {
-  .dash-grid { grid-template-columns: 1fr; }
 }
 
 .dash-card {
@@ -192,6 +192,13 @@
   padding: 1.5rem;
 }
 
+.card-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
 .card-title {
   font-family: 'DM Serif Display', serif;
   font-size: 1.1rem;
@@ -199,4 +206,26 @@
   color: #1a1a1a;
   margin: 0 0 1.25rem;
   letter-spacing: -0.3px;
+}
+
+.card-title-row .card-title { margin-bottom: 0; }
+
+.card-hint {
+  font-size: 0.75rem;
+  color: #bbb;
+  font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .dash-grid { grid-template-columns: 1fr; }
+  .dash-main { padding: 1.25rem; }
+  .dash-header { padding: 0 1.25rem; }
+  .month-label { min-width: 140px; font-size: 1.1rem; }
+}
+
+@media (max-width: 480px) {
+  .dash-username { display: none; }
+  .dash-month-row { flex-direction: column; align-items: flex-start; }
+  .dash-actions { width: 100%; justify-content: flex-end; }
 }

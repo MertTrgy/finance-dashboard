@@ -1,6 +1,4 @@
-.chart-wrap {
-  padding: 0.25rem 0;
-}
+.chart-wrap { padding: 0.25rem 0; }
 
 .chart-section-label {
   font-family: 'DM Sans', sans-serif;
@@ -15,17 +13,12 @@
 .chart-tooltip {
   background: #1a1a1a;
   border-radius: 8px;
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 0.875rem;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.8125rem;
   color: #fff;
   line-height: 1.6;
-}
-
-.chart-tooltip-label {
-  color: #aaa;
-  margin: 0 0 2px;
-  font-size: 0.75rem;
+  white-space: nowrap;
 }
 
 .chart-empty {
@@ -37,4 +30,59 @@
   font-size: 0.875rem;
   color: #bbb;
   text-align: center;
+  border: 1px dashed #e8e6e1;
+  border-radius: 10px;
+}
+
+/* Pie + legend side by side */
+.pie-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Legend */
+.pie-legend {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-left: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.pie-legend::-webkit-scrollbar { width: 4px; }
+.pie-legend::-webkit-scrollbar-track { background: transparent; }
+.pie-legend::-webkit-scrollbar-thumb { background: #e2e0da; border-radius: 2px; }
+
+.pie-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.pie-legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pie-legend-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8125rem;
+  color: #444;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pie-legend-val {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  flex-shrink: 0;
 }
