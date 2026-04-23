@@ -13,7 +13,7 @@ export function useTransactions(month) {
       const params = month ? { month } : {};
       const { data } = await api.get('/transactions/', { params });
       setTransactions(data.results ?? data);
-    } catch (e) {
+    } catch {
       setError('Could not load transactions.');
     } finally {
       setLoading(false);
@@ -51,7 +51,19 @@ export function useCategories() {
     return data;
   };
 
-  return { categories, addCategory };
+  // PATCH — update name or color of an existing category
+  const updateCategory = async (id, payload) => {
+    const { data } = await api.patch(`/categories/${id}/`, payload);
+    setCategories((prev) => prev.map((c) => (c.id === id ? data : c)));
+    return data;
+  };
+
+  const deleteCategory = async (id) => {
+    await api.delete(`/categories/${id}/`);
+    setCategories((prev) => prev.filter((c) => c.id !== id));
+  };
+
+  return { categories, addCategory, updateCategory, deleteCategory };
 }
 
 export function useSummary(month) {

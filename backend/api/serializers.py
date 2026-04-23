@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Category, Transaction
+from .models import Category, Transaction, Budget
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -42,3 +42,20 @@ class TransactionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
+    
+class BudgetSerializer(serializers.ModelSerializer):
+    category_detail = CategorySerializer(source='category', read_only=True)
+ 
+    class Meta:
+        model  = Budget
+        fields = ('id', 'category', 'category_detail', 'limit', 'month')
+ 
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+ 
+    def update(self, instance, validated_data):
+        # Allow upsert-style update of limit
+        instance.limit = validated_data.get('limit', instance.limit)
+        instance.save()
+        return instance

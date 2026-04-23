@@ -40,3 +40,17 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f'{self.type} £{self.amount} on {self.date}'
+class Budget(models.Model):
+    """Monthly spend limit per category per user."""
+    user     = models.ForeignKey(User, on_delete=models.CASCADE, related_name='budgets')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='budgets')
+    limit    = models.DecimalField(max_digits=12, decimal_places=2)
+    # month stored as YYYY-MM string for simplicity
+    month    = models.CharField(max_length=7)
+
+    class Meta:
+        unique_together = ('user', 'category', 'month')
+        ordering = ['month', 'category__name']
+
+    def __str__(self):
+        return f'{self.user} · {self.category.name} · {self.month} · £{self.limit}'
