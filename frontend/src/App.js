@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Categories from './pages/Categories';
+import Recurring from './pages/Recurring';
 
 export default function App() {
   return (
@@ -22,6 +23,10 @@ export default function App() {
 
             <Route path="/categories" element={
               <ProtectedRoute><Categories /></ProtectedRoute>
+            }/>
+
+            <Route path="/recurring" element={
+              <ProtectedRoute><Recurring /></ProtectedRoute>
             }/>
 
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,17 +1,20 @@
 import { useState } from 'react';
+import { useCurrencies } from '../hooks/useCurrencies';
 import './TransactionForm.css';
 
 const today = () => new Date().toISOString().split('T')[0];
 
 export default function TransactionForm({ categories, onAdd, onEdit, onClose, transaction }) {
   const isEditing = Boolean(transaction);
+  const { currencies, previewGBP } = useCurrencies();
 
   const [form, setForm] = useState({
-    type:     transaction?.type     ?? 'expense',
-    amount:   transaction?.amount   ?? '',
-    date:     transaction?.date     ?? today(),
-    note:     transaction?.note     ?? '',
-    category: transaction?.category ?? '',
+    type:     transaction?.type              ?? 'expense',
+    amount:   transaction?.original_amount  ?? transaction?.amount ?? '',
+    currency: transaction?.original_currency ?? 'GBP',
+    date:     transaction?.date              ?? today(),
+    note:     transaction?.note              ?? '',
+    category: transaction?.category          ?? '',
   });
   const [saving, setSaving] = useState(false);
   const [error, setError]   = useState('');
@@ -19,6 +22,7 @@ export default function TransactionForm({ categories, onAdd, onEdit, onClose, tr
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const filteredCats = categories.filter((c) => c.type === form.type);
+  const gbpPreview   = previewGBP(form.amount, form.currency);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,11 +34,12 @@ export default function TransactionForm({ categories, onAdd, onEdit, onClose, tr
     setSaving(true);
     try {
       const payload = {
-        type:     form.type,
-        amount:   parseFloat(form.amount).toFixed(2),
-        date:     form.date,
-        note:     form.note,
-        category: form.category || null,
+        type:           form.type,
+        input_amount:   parseFloat(form.amount).toFixed(2),
+        input_currency: form.currency,
+        date:           form.date,
+        note:           form.note,
+        category:       form.category || null,
       };
       if (isEditing) {
         await onEdit(transaction.id, payload);
@@ -54,20 +59,18 @@ export default function TransactionForm({ categories, onAdd, onEdit, onClose, tr
     <div className="tf-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="tf-modal">
         <div className="tf-header">
-          <span className="tf-title">
-            {isEditing ? 'Edit transaction' : 'New transaction'}
-          </span>
+          <span className="tf-title">{isEditing ? 'Edit transaction' : 'New transaction'}</span>
           <button className="tf-close" onClick={onClose}>✕</button>
         </div>
 
         {error && <div className="tf-error">{error}</div>}
 
         <form onSubmit={handleSubmit} className="tf-form">
+          {/* Type toggle */}
           <div className="tf-toggle">
             {['expense', 'income'].map((t) => (
               <button
-                key={t}
-                type="button"
+                key={t} type="button"
                 className={`tf-toggle-btn ${form.type === t ? 'active' : ''} ${t}`}
                 onClick={() => { set('type', t); set('category', ''); }}
               >
@@ -76,20 +79,38 @@ export default function TransactionForm({ categories, onAdd, onEdit, onClose, tr
             ))}
           </div>
 
+          {/* Amount + currency */}
           <div className="tf-field">
-            <label>Amount (£)</label>
-            <input
-              type="number"
-              min="0.01"
-              step="0.01"
-              placeholder="0.00"
-              value={form.amount}
-              onChange={(e) => set('amount', e.target.value)}
-              className="tf-amount-input"
-              required
-            />
+            <label>Amount</label>
+            <div className="tf-amount-row">
+              <select
+                value={form.currency}
+                onChange={(e) => set('currency', e.target.value)}
+                className="tf-currency-select"
+              >
+                {currencies.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+              <input
+                type="number"
+                min="0.01" step="0.01"
+                placeholder="0.00"
+                value={form.amount}
+                onChange={(e) => set('amount', e.target.value)}
+                className="tf-amount-input"
+                required
+              />
+            </div>
+            {/* Live GBP preview when foreign currency selected */}
+            {gbpPreview && (
+              <span className="tf-gbp-preview">
+                ≈ £{gbpPreview} GBP at today's rate
+              </span>
+            )}
           </div>
 
+          {/* Date */}
           <div className="tf-field">
             <label>Date</label>
             <input
@@ -100,6 +121,7 @@ export default function TransactionForm({ categories, onAdd, onEdit, onClose, tr
             />
           </div>
 
+          {/* Category */}
           <div className="tf-field">
             <label>Category <span className="tf-optional">(optional)</span></label>
             <select value={form.category} onChange={(e) => set('category', e.target.value)}>
@@ -110,6 +132,7 @@ export default function TransactionForm({ categories, onAdd, onEdit, onClose, tr
             </select>
           </div>
 
+          {/* Note */}
           <div className="tf-field">
             <label>Note <span className="tf-optional">(optional)</span></label>
             <input

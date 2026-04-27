@@ -8,12 +8,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import Category, Transaction, Budget
+from .models import Category, Transaction, Budget, RecurringTransaction
 from .serializers import (
     RegisterSerializer, UserSerializer,
-    CategorySerializer, TransactionSerializer, BudgetSerializer,
+    CategorySerializer, TransactionSerializer, 
+    BudgetSerializer, RecurringTransactionSerializer,
 )
-
+from .currency_service import get_rates, SUPPORTED_CURRENCIES
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
 
@@ -71,6 +72,16 @@ class TransactionViewSet(viewsets.ModelViewSet):
         return qs
 
 
+# ── Recurring Transactions ────────────────────────────────────────────────────
+
+class RecurringTransactionViewSet(viewsets.ModelViewSet):
+    serializer_class   = RecurringTransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return RecurringTransaction.objects.filter(user=self.request.user)
+
+
 # ── Budgets ───────────────────────────────────────────────────────────────────
 
 class BudgetViewSet(viewsets.ModelViewSet):
@@ -90,11 +101,6 @@ class BudgetViewSet(viewsets.ModelViewSet):
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def monthly_summary(request):
-    """
-    GET /api/summary/?month=2025-04
-    Returns income, expenses, balance, per-category breakdown,
-    and an over_budget list for categories that exceeded their limit.
-    """
     month = request.query_params.get('month')
     qs    = Transaction.objects.filter(user=request.user)
 
@@ -112,7 +118,6 @@ def monthly_summary(request):
     income   = totals['income']   or 0
     expenses = totals['expenses'] or 0
 
-    # Per-category spend
     by_category = list(
         qs.filter(type='expense')
         .values('category__id', 'category__name', 'category__color')
@@ -120,14 +125,11 @@ def monthly_summary(request):
         .order_by('-total')
     )
 
-    # Over-budget detection
     over_budget = []
     if month:
-        budgets = Budget.objects.filter(user=request.user, month=month)
-        for budget in budgets:
+        for budget in Budget.objects.filter(user=request.user, month=month):
             cat_spend = next(
-                (c['total'] for c in by_category if c['category__id'] == budget.category_id),
-                0,
+                (c['total'] for c in by_category if c['category__id'] == budget.category_id), 0
             )
             if cat_spend > budget.limit:
                 over_budget.append({
@@ -171,15 +173,35 @@ def export_csv(request):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
     writer = csv.writer(response)
-    writer.writerow(['Date', 'Type', 'Amount', 'Category', 'Note'])
+    writer.writerow(['Date', 'Type', 'Amount (GBP)', 'Original Amount',
+                     'Original Currency', 'Exchange Rate', 'Category', 'Note'])
 
     for tx in qs:
         writer.writerow([
-            tx.date,
-            tx.type,
-            tx.amount,
+            tx.date, tx.type, tx.amount,
+            tx.original_amount or '',
+            tx.original_currency or 'GBP',
+            tx.exchange_rate or '',
             tx.category.name if tx.category else '',
             tx.note,
         ])
 
     return response
+
+
+# ── Currency rates ────────────────────────────────────────────────────────────
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def currency_rates(request):
+    """
+    GET /api/currencies/
+    Returns live exchange rates (GBP base) and the list of supported currencies.
+    Cached implicitly by the Frankfurter CDN — at most one real HTTP call per day.
+    """
+    rates = get_rates(base='GBP')
+    return Response({
+        'base':       'GBP',
+        'rates':      rates,
+        'currencies': SUPPORTED_CURRENCIES,
+    })

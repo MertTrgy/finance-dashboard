@@ -177,3 +177,50 @@
 .tf-submit.income:hover  { background: #166534; }
 .tf-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 .tf-submit:active { transform: scale(0.99); }
+
+/* Add these to your existing TransactionForm.css */
+
+.tf-amount-row {
+  display: flex;
+  gap: 8px;
+}
+
+.tf-currency-select {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  background: #fafaf8;
+  border: 1px solid #e2e0da;
+  border-radius: 8px;
+  padding: 0.625rem 0.25rem;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 80px !important;
+  max-width: 80px !important;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.tf-currency-select:focus { border-color: #1a1a1a; background: #fff; }
+
+.tf-amount-input {
+  flex: 1;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  color: #1a1a1a;
+  background: #fafaf8;
+  border: 1px solid #e2e0da;
+  border-radius: 8px;
+  padding: 0.625rem 0.875rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.tf-amount-input:focus { border-color: #1a1a1a; background: #fff; }
+
+.tf-gbp-preview {
+  font-size: 0.75rem;
+  color: #15803d;
+  font-style: italic;
+  margin-top: 4px;
+}

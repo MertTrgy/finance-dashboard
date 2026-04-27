@@ -52,6 +52,12 @@ export default function TransactionList({ transactions, loading, error, onEdit, 
             <span className="tl-meta">
               {t.category_detail?.name && t.note ? `${t.category_detail.name} · ` : ''}
               {fmtDate(t.date)}
+              {/* Foreign currency badge */}
+              {t.original_currency && t.original_currency !== 'GBP' && (
+                <span className="tl-currency-badge">
+                  {t.original_currency} {parseFloat(t.original_amount).toFixed(2)}
+                </span>
+              )}
             </span>
           </div>
           <span className={`tl-amount ${t.type}`}>
@@ -61,9 +67,7 @@ export default function TransactionList({ transactions, loading, error, onEdit, 
             className="tl-delete"
             onClick={(e) => { e.stopPropagation(); onDelete(t.id); }}
             aria-label="Delete transaction"
-          >
-            ✕
-          </button>
+          >✕</button>
         </div>
       ))}
     </div>
