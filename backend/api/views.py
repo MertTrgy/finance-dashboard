@@ -7,6 +7,7 @@ from rest_framework import generics, viewsets, permissions, filters
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework import status
 
 from .models import Category, Transaction, Budget, RecurringTransaction
 from .serializers import (
@@ -15,6 +16,8 @@ from .serializers import (
     BudgetSerializer, RecurringTransactionSerializer,
 )
 from .currency_service import get_rates, SUPPORTED_CURRENCIES
+from datetime import date
+
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
 
@@ -205,3 +208,59 @@ def currency_rates(request):
         'rates':      rates,
         'currencies': SUPPORTED_CURRENCIES,
     })
+
+# ── ML: Spend forecast ────────────────────────────────────────────────────────
+ 
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def forecast_view(request):
+    try:
+        from .ml_service import forecast_spending
+        forecasts = forecast_spending(request.user)
+    except Exception as e:
+        return Response({'error': 'Forecast unavailable', 'detail': str(e)},
+                        status=status.HTTP_503_SERVICE_UNAVAILABLE)
+ 
+    today = date.today()
+    nm    = today.month + 1
+    ny    = today.year
+    if nm > 12:
+        nm -= 12
+        ny += 1
+    return Response({
+        'forecasts':   forecasts,
+        'next_month':  f'{ny}-{str(nm).zfill(2)}',
+    })
+ 
+ 
+# ── ML: Anomaly detection ─────────────────────────────────────────────────────
+ 
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def anomalies_view(request):
+    month = request.query_params.get('month')
+    try:
+        from .ml_service import detect_anomalies
+        ids = detect_anomalies(request.user, month=month)
+    except Exception as e:
+        return Response({'error': 'Anomaly detection unavailable', 'detail': str(e)},
+                        status=status.HTTP_503_SERVICE_UNAVAILABLE)
+    return Response({'anomaly_ids': list(ids), 'count': len(ids)})
+ 
+ 
+# ── ML: Category suggestion ───────────────────────────────────────────────────
+ 
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def suggest_category_view(request):
+    note = request.data.get('note', '').strip()
+    if not note:
+        return Response({'error': 'note field is required'},
+                        status=status.HTTP_400_BAD_REQUEST)
+    try:
+        from .ml_service import suggest_category
+        suggestion = suggest_category(note, request.user)
+    except Exception as e:
+        return Response({'error': 'Suggestion unavailable', 'detail': str(e)},
+                        status=status.HTTP_503_SERVICE_UNAVAILABLE)
+    return Response({'suggestion': suggestion})

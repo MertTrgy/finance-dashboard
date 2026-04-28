@@ -4,9 +4,14 @@ const fmt = (amount) =>
   new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount);
 
 const fmtDate = (dateStr) =>
-  new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  new Date(dateStr).toLocaleDateString('en-GB', {
+    day: 'numeric', month: 'short', year: 'numeric',
+  });
 
-export default function TransactionList({ transactions, loading, error, onEdit, onDelete }) {
+export default function TransactionList({
+  transactions, loading, error, onEdit, onDelete,
+  anomalyIds = new Set(),   // ← new prop: Set of flagged IDs
+}) {
   if (loading) {
     return (
       <div className="tl-stack">
@@ -39,37 +44,48 @@ export default function TransactionList({ transactions, loading, error, onEdit, 
 
   return (
     <div className="tl-stack">
-      {transactions.map((t) => (
-        <div
-          key={t.id}
-          className={`tl-row ${t.type}`}
-          onClick={() => onEdit(t)}
-          title="Click to edit"
-        >
-          <div className="tl-dot" />
-          <div className="tl-info">
-            <span className="tl-note">{t.note || t.category_detail?.name || '—'}</span>
-            <span className="tl-meta">
-              {t.category_detail?.name && t.note ? `${t.category_detail.name} · ` : ''}
-              {fmtDate(t.date)}
-              {/* Foreign currency badge */}
-              {t.original_currency && t.original_currency !== 'GBP' && (
-                <span className="tl-currency-badge">
-                  {t.original_currency} {parseFloat(t.original_amount).toFixed(2)}
-                </span>
-              )}
+      {transactions.map((t) => {
+        const isAnomaly = anomalyIds.has(t.id);
+        return (
+          <div
+            key={t.id}
+            className={`tl-row ${t.type} ${isAnomaly ? 'anomaly' : ''}`}
+            onClick={() => onEdit(t)}
+            title={isAnomaly ? 'Flagged as unusual spending' : 'Click to edit'}
+          >
+            <div className="tl-dot" />
+            <div className="tl-info">
+              <span className="tl-note">
+                {t.note || t.category_detail?.name || '—'}
+                {isAnomaly && (
+                  <span className="tl-anomaly-badge" title="Unusual amount detected by ML">
+                    unusual
+                  </span>
+                )}
+              </span>
+              <span className="tl-meta">
+                {t.category_detail?.name && t.note
+                  ? `${t.category_detail.name} · `
+                  : ''}
+                {fmtDate(t.date)}
+                {t.original_currency && t.original_currency !== 'GBP' && (
+                  <span className="tl-currency-badge">
+                    {t.original_currency} {parseFloat(t.original_amount).toFixed(2)}
+                  </span>
+                )}
+              </span>
+            </div>
+            <span className={`tl-amount ${t.type}`}>
+              {t.type === 'income' ? '+' : '−'}{fmt(t.amount)}
             </span>
+            <button
+              className="tl-delete"
+              onClick={(e) => { e.stopPropagation(); onDelete(t.id); }}
+              aria-label="Delete transaction"
+            >✕</button>
           </div>
-          <span className={`tl-amount ${t.type}`}>
-            {t.type === 'income' ? '+' : '−'}{fmt(t.amount)}
-          </span>
-          <button
-            className="tl-delete"
-            onClick={(e) => { e.stopPropagation(); onDelete(t.id); }}
-            aria-label="Delete transaction"
-          >✕</button>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

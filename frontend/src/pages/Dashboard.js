@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+
 import { useAuth } from '../context/AuthContext';
+
 import { useTransactions, useCategories, useSummary } from '../hooks/useTransactions';
+import { useAnomalies } from '../hooks/useML';
+
 import { useToast, ToastContainer } from '../components/Toast';
 import ErrorBoundary from '../components/ErrorBoundary';
 import TransactionForm from '../components/TransactionForm';
@@ -36,6 +40,8 @@ export default function Dashboard() {
           addTransaction, editTransaction, deleteTransaction } = useTransactions(month);
   const { categories }                    = useCategories();
   const { summary, loading: sumLoading }  = useSummary(month);
+
+  const { anomalyIds } = useAnomalies(month);
 
   // Over-budget toasts
   useEffect(() => {
@@ -118,9 +124,11 @@ export default function Dashboard() {
     <div className="dashboard">
       <header className="dash-header">
         <span className="dash-logo">Finance</span>
-        <nav className="dash-nav">
-          <Link to="/categories" className="dash-nav-link">Categories</Link>
-        </nav>
+          <nav className="dash-nav">
+            <Link to="/categories" className="dash-nav-link">Categories</Link>
+            <Link to="/recurring"  className="dash-nav-link">Recurring</Link>  
+            <Link to="/insights"   className="dash-nav-link">Insights</Link>   
+          </nav>
         <div className="dash-user">
           <span className="dash-username">{user?.username}</span>
           <button onClick={handleLogout} className="logout-btn">Sign out</button>
@@ -188,6 +196,7 @@ export default function Dashboard() {
                 error={txError}
                 onEdit={openEdit}
                 onDelete={handleDelete}
+                anomalyIds={anomalyIds} 
               />
             </section>
           </ErrorBoundary>
