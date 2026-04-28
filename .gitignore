@@ -1,0 +1,21 @@
+# Environment variables — never commit these
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+*.egg-info/
+
+# Django
+db.sqlite3
+*.log
+staticfiles/
+
+# Node
+node_modules/
+frontend/build/
+
+# macOS
+.DS_Store
