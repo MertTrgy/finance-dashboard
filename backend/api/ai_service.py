@@ -335,10 +335,17 @@ def _stream_ollama(messages, system_prompt):
                 except json.JSONDecodeError:
                     continue
 
-    except ConnectionRefusedError:
-        yield "Error: Ollama is not running. Start it with: ollama serve"
     except Exception as e:
-        yield f"\n\nOllama error: {str(e)}"
+        msg = str(e)
+        if 'Connection refused' in msg or 'ConnectionRefused' in msg:
+            yield (
+                "Ollama is not running or not installed.\n\n"
+                "To install: https://ollama.ai\n"
+                "Then run:   ollama pull llama3\n"
+                "Then run:   ollama serve"
+            )
+        else:
+            yield f"Ollama error: {msg}"
 
 
 # ── Public streaming function ─────────────────────────────────────────────────
