@@ -10,6 +10,8 @@ from .views import (
     forecast_view, anomalies_view, suggest_category_view
 )
 
+from .ai_views import ai_chat, ai_providers, ai_context
+
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')
 router.register(r'transactions', TransactionViewSet, basename='transaction')
@@ -35,4 +37,9 @@ urlpatterns = [
  
     # ── CRUD (router-generated) ───────────────────────────────────────────
     path('', include(router.urls)),
+
+    # ── AI ───────────────────────────────────────────
+    path('ai/chat/',      ai_chat,      name='ai_chat'),
+    path('ai/providers/', ai_providers, name='ai_providers'),
+    path('ai/context/',   ai_context,   name='ai_context'),
 ]

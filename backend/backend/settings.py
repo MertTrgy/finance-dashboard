@@ -158,3 +158,21 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',   # React dev server
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+ 
+# ── AI Provider Configuration ─────────────────────────────────────────────────
+# Set AI_PROVIDER to the default provider: 'claude', 'gemini', or 'ollama'
+# The frontend settings page can change this at runtime without restarting.
+AI_PROVIDER = os.environ.get('AI_PROVIDER', 'gemini')
+ 
+# Claude (Anthropic) — https://console.anthropic.com
+ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
+CLAUDE_MODEL      = 'claude-sonnet-4-5'
+ 
+# Gemini (Google) — https://aistudio.google.com  (free tier available)
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_MODEL   = 'gemini-2.5-flash-lite'
+ 
+# Ollama (local) — https://ollama.ai  (completely free, runs on your Mac)
+OLLAMA_BASE_URL = os.environ.get('OLLAMA_BASE_URL', 'http://localhost:11434')
+OLLAMA_MODEL    = os.environ.get('OLLAMA_MODEL', 'llama3')

@@ -1,6 +1,9 @@
 # Environment variables — never commit these
 .env
 
+# Claude Code local settings
+.claude/
+
 # Python
 __pycache__/
 *.py[cod]

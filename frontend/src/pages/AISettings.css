@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap');
+
+.ais-page {
+  min-height: 100vh;
+  background: #f5f4f0;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ais-main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ais-heading {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  letter-spacing: -0.5px;
+  margin: 0 0 0.25rem;
+}
+
+.ais-sub { font-size: 0.875rem; color: #888; margin: 0; }
+
+/* Provider cards */
+.ais-providers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ais-provider-card {
+  background: #fff;
+  border: 1px solid #ece9e3;
+  border-radius: 12px;
+  padding: 1.125rem 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.ais-provider-card:hover { border-color: #ccc; }
+
+.ais-provider-card.active {
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(26,26,26,0.05);
+}
+
+.ais-provider-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.ais-provider-name-row { display: flex; align-items: center; gap: 8px; }
+
+.ais-provider-name { font-size: 0.9375rem; font-weight: 500; color: #1a1a1a; }
+
+.ais-provider-tag {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.ais-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #e2e0da;
+  transition: border-color 0.15s;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ais-radio.active {
+  border-color: #1a1a1a;
+}
+
+.ais-radio.active::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #1a1a1a;
+}
+
+.ais-provider-desc {
+  font-size: 0.8125rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 8px;
+}
+
+.ais-provider-status { display: flex; align-items: center; gap: 6px; }
+
+.ais-status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ais-status-dot.ready     { background: #15803d; }
+.ais-status-dot.not-ready { background: #d1cdc6; }
+
+.ais-status-label { font-size: 0.75rem; color: #aaa; }
+
+/* Config card */
+.ais-card {
+  background: #fff;
+  border: 1px solid #ece9e3;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+}
+
+.ais-card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin: 0 0 0.875rem;
+}
+
+.ais-ext-link {
+  display: inline-block;
+  font-size: 0.8125rem;
+  color: #185fa5;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  transition: color 0.15s;
+}
+.ais-ext-link:hover { color: #0c447c; text-decoration: underline; }
+
+.ais-fields { display: flex; flex-direction: column; gap: 0.875rem; }
+
+/* Reuse tf-field styles from TransactionForm.css */
+.tf-field { display: flex; flex-direction: column; gap: 0.375rem; }
+.tf-field label { font-size: 0.8125rem; font-weight: 500; color: #555; }
+.tf-field input {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9375rem;
+  color: #1a1a1a;
+  background: #fafaf8;
+  border: 1px solid #e2e0da;
+  border-radius: 8px;
+  padding: 0.625rem 0.875rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.tf-field input:focus { border-color: #1a1a1a; background: #fff; }
+
+.ais-save-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.125rem;
+}
+
+.ais-save-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  background: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  padding: 0.625rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ais-save-btn:hover    { background: #2d2d2d; }
+.ais-save-btn:disabled { background: #999; cursor: not-allowed; }
+
+.ais-save-msg { font-size: 0.8125rem; font-weight: 500; }
+.ais-save-msg.ok  { color: #15803d; }
+.ais-save-msg.err { color: #b91c1c; }
+
+/* Ollama guide */
+.ais-guide { background: #fafaf8; }
+
+.ais-steps { display: flex; flex-direction: column; gap: 1rem; }
+
+.ais-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.ais-step-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: #f0ede8;
+  color: #666;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ais-step strong { display: block; font-size: 0.875rem; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; }
+
+.ais-code {
+  display: block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8125rem;
+  background: #f1f5f9;
+  border-left: 2px solid #2563eb;
+  padding: 5px 10px;
+  border-radius: 0 4px 4px 0;
+  color: #1e293b;
+  margin: 4px 0;
+}
+
+.ais-step-or { display: block; font-size: 0.75rem; color: #aaa; margin-top: 3px; font-style: italic; }
+
+/* Info card */
+.ais-info-text { font-size: 0.875rem; color: #666; line-height: 1.6; margin: 0; }

@@ -14,6 +14,7 @@ import SummaryCards from '../components/SummaryCards';
 import SpendingChart from '../components/SpendingChart';
 import api from '../services/api';
 import './Dashboard.css';
+import AIAssistant from '../components/AIAssistant';
 
 const currentMonth = () => {
   const d = new Date();
@@ -127,7 +128,8 @@ export default function Dashboard() {
           <nav className="dash-nav">
             <Link to="/categories" className="dash-nav-link">Categories</Link>
             <Link to="/recurring"  className="dash-nav-link">Recurring</Link>  
-            <Link to="/insights"   className="dash-nav-link">Insights</Link>   
+            <Link to="/insights"   className="dash-nav-link">Insights</Link>
+            <Link to="/ai-settings" className="dash-nav-link">AI Settings</Link>   
           </nav>
         <div className="dash-user">
           <span className="dash-username">{user?.username}</span>
@@ -199,6 +201,10 @@ export default function Dashboard() {
                 anomalyIds={anomalyIds} 
               />
             </section>
+          </ErrorBoundary>
+
+          <ErrorBoundary>
+            <AIAssistant month={month} />
           </ErrorBoundary>
         </div>
       </main>

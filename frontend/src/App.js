@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Categories from './pages/Categories';
 import Recurring from './pages/Recurring';
 import Insights from './pages/Insights';
+import AISettings from './pages/AISettings';
 
 export default function App() {
   return (
@@ -32,6 +33,10 @@ export default function App() {
 
             <Route path="/insights" element={
               <ProtectedRoute><Insights /></ProtectedRoute>
+            }/>
+
+            <Route path="/ai-settings" element={
+              <ProtectedRoute><AISettings /></ProtectedRoute>
             }/>
 
             <Route path="*" element={<Navigate to="/" replace />} />
