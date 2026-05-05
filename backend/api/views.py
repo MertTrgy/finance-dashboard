@@ -10,6 +10,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
 
 from .models import Category, Transaction, Budget, RecurringTransaction
+from .pagination import TransactionPagination
 from .serializers import (
     RegisterSerializer, UserSerializer,
     CategorySerializer, TransactionSerializer, 
@@ -48,14 +49,30 @@ class CategoryViewSet(viewsets.ModelViewSet):
 # ── Transactions ──────────────────────────────────────────────────────────────
 
 class TransactionViewSet(viewsets.ModelViewSet):
+    """
+    Full CRUD for transactions with search, date filtering, and pagination.
+
+    Query params supported:
+        ?month=2026-04           filter by year-month (existing)
+        ?type=expense            filter by type (existing)
+        ?category=3              filter by category ID (existing)
+        ?search=tesco            search note AND category name (NEW)
+        ?date_from=2026-04-01    filter from date inclusive (NEW)
+        ?date_to=2026-04-30      filter to date inclusive (NEW)
+        ?page=2                  page number (NEW)
+        ?page_size=20            results per page (NEW)
+    """
     serializer_class   = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class   = TransactionPagination
     filter_backends    = [filters.OrderingFilter]
-    ordering_fields    = ['date', 'amount']
+    ordering_fields    = ['date', 'amount', 'created_at']
+    ordering           = ['-date', '-created_at']
 
     def get_queryset(self):
-        qs = Transaction.objects.filter(user=self.request.user)
+        qs = Transaction.objects.filter(user=self.request.user).select_related('category')
 
+        # ── Existing filters ──────────────────────────────────────────────
         month = self.request.query_params.get('month')
         if month:
             try:
@@ -71,6 +88,29 @@ class TransactionViewSet(viewsets.ModelViewSet):
         category = self.request.query_params.get('category')
         if category:
             qs = qs.filter(category_id=category)
+
+        # ── New: text search across note + category name ──────────────────
+        search = self.request.query_params.get('search', '').strip()
+        if search:
+            qs = qs.filter(
+                Q(note__icontains=search) |
+                Q(category__name__icontains=search)
+            )
+
+        # ── New: date range ───────────────────────────────────────────────
+        date_from = self.request.query_params.get('date_from')
+        if date_from:
+            try:
+                qs = qs.filter(date__gte=date_from)
+            except ValueError:
+                pass
+
+        date_to = self.request.query_params.get('date_to')
+        if date_to:
+            try:
+                qs = qs.filter(date__lte=date_to)
+            except ValueError:
+                pass
 
         return qs
 

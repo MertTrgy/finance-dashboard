@@ -9,7 +9,7 @@ from .views import (
     monthly_summary, export_csv, currency_rates,
     forecast_view, anomalies_view, suggest_category_view
 )
-
+from .pdf_view import export_pdf
 from .ai_views import ai_chat, ai_providers, ai_context
 
 router = DefaultRouter()
@@ -42,4 +42,8 @@ urlpatterns = [
     path('ai/chat/',      ai_chat,      name='ai_chat'),
     path('ai/providers/', ai_providers, name='ai_providers'),
     path('ai/context/',   ai_context,   name='ai_context'),
+
+    # ── PDF Export ───────────────────────────────────────────
+    path('export-pdf/', export_pdf, name='export_pdf'),
+
 ]

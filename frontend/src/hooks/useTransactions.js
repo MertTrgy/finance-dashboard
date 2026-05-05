@@ -1,30 +1,53 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 
-export function useTransactions(month) {
+export function useTransactions(month, filters = {}) {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading]           = useState(true);
   const [error, setError]               = useState(null);
+  const [pagination, setPagination]     = useState({ count: 0, pages: 1, page: 1 });
 
-  const fetch = useCallback(async () => {
+  const fetch = useCallback(async (page = 1) => {
     setLoading(true);
     setError(null);
     try {
-      const params = month ? { month } : {};
+      const params = { page, page_size: 20 };
+      if (month)            params.month     = month;
+      if (filters.search)   params.search    = filters.search;
+      if (filters.dateFrom) params.date_from = filters.dateFrom;
+      if (filters.dateTo)   params.date_to   = filters.dateTo;
+      if (filters.type)     params.type      = filters.type;
+      if (filters.category) params.category  = filters.category;
+
       const { data } = await api.get('/transactions/', { params });
-      setTransactions(data.results ?? data);
+
+      // Handle both paginated and non-paginated responses
+      if (data.results !== undefined) {
+        setTransactions(data.results);
+        setPagination({
+          count: data.count,
+          pages: data.pages || 1,
+          page,
+        });
+      } else {
+        setTransactions(Array.isArray(data) ? data : []);
+        setPagination({ count: data.length || 0, pages: 1, page: 1 });
+      }
     } catch {
       setError('Could not load transactions.');
     } finally {
       setLoading(false);
     }
-  }, [month]);
+  }, [month, filters.search, filters.dateFrom, filters.dateTo, filters.type, filters.category]); // eslint-disable-line
 
-  useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => { fetch(1); }, [fetch]);
+
+  const goToPage = (page) => fetch(page);
 
   const addTransaction = async (payload) => {
     const { data } = await api.post('/transactions/', payload);
-    setTransactions((prev) => [data, ...prev]);
+    // Refresh the current view to respect filters/pagination
+    await fetch(pagination.page);
     return data;
   };
 
@@ -39,7 +62,10 @@ export function useTransactions(month) {
     setTransactions((prev) => prev.filter((t) => t.id !== id));
   };
 
-  return { transactions, loading, error, refetch: fetch, addTransaction, editTransaction, deleteTransaction };
+  return {
+    transactions, loading, error, pagination, goToPage,
+    refetch: fetch, addTransaction, editTransaction, deleteTransaction,
+  };
 }
 
 export function useCategories() {
