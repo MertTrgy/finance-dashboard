@@ -12,6 +12,7 @@ import Pagination from '../components/Pagination';
 import SummaryCards from '../components/SummaryCards';
 import SpendingChart from '../components/SpendingChart';
 import AIAssistant from '../components/AIAssistant';
+import ReceiptScanner from '../components/ReceiptScanner';
 import api from '../services/api';
 import './Dashboard.css';
 
@@ -40,7 +41,7 @@ export default function Dashboard() {
 
   const {
     transactions, loading: txLoading, error: txError,
-    pagination, goToPage,
+    pagination, goToPage, refetch,
     addTransaction, editTransaction, deleteTransaction,
   } = useTransactions(month, filters);
 
@@ -166,6 +167,13 @@ export default function Dashboard() {
             <button className="export-btn export-btn--pdf" onClick={handleExportPDF} disabled={exportingPdf}>
               {exportingPdf ? 'Generating…' : '↓ PDF'}
             </button>
+            <ReceiptScanner
+                categories={categories}
+                onSaved={(tx) => {
+                  toast.success('Receipt saved as transaction');
+                  refetch();        // refresh the transaction list
+                }}
+              />
             <button className="add-btn" onClick={() => { setEditingTx(null); setShowForm(true); }}>
               + Add transaction
             </button>

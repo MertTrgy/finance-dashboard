@@ -11,6 +11,7 @@ from .views import (
 )
 from .pdf_view import export_pdf
 from .ai_views import ai_chat, ai_providers, ai_context
+from .receipt_views import scan_receipt, save_receipt, receipt_items
 
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')
@@ -45,5 +46,10 @@ urlpatterns = [
 
     # ── PDF Export ───────────────────────────────────────────
     path('export-pdf/', export_pdf, name='export_pdf'),
+
+     # ── Receipt ───────────────────────────────────────────
+    path('receipt/scan/',  scan_receipt,  name='receipt_scan'),
+    path('receipt/save/',  save_receipt,  name='receipt_save'),
+    path('receipt/items/', receipt_items, name='receipt_items'),
 
 ]

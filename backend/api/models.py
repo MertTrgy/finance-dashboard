@@ -59,6 +59,46 @@ class Transaction(models.Model):
     def __str__(self):
         return f'{self.type} £{self.amount} on {self.date}'
     
+
+class ReceiptLineItem(models.Model):
+    """
+    A single line item extracted from a receipt photo.
+    Linked to the Transaction it was saved under.
+ 
+    Enables tracking e.g. "how many times did I buy milk this month?"
+    and feeds the ML spend prediction with item-level granularity.
+    """
+    transaction = models.ForeignKey(
+        'Transaction',
+        on_delete=models.CASCADE,
+        related_name='line_items',
+    )
+    name        = models.CharField(max_length=255)          # "Semi-skimmed Milk 2L"
+    quantity    = models.DecimalField(
+        max_digits=8, decimal_places=2, default=1
+    )                                                        # 2.0
+    unit_price  = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )                                                        # £1.80
+    total_price = models.DecimalField(
+        max_digits=10, decimal_places=2
+    )                                                        # £3.60
+    category    = models.ForeignKey(
+        'Category',
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='line_items',
+    )
+    # Raw text as Tesseract read it — useful for debugging / reprocessing
+    raw_text    = models.CharField(max_length=500, blank=True)
+ 
+    class Meta:
+        ordering = ['id']
+ 
+    def __str__(self):
+        return f'{self.name} x{self.quantity} = £{self.total_price}'
+ 
+    
 class Budget(models.Model):
     """Monthly spend limit per category per user."""
     user     = models.ForeignKey(User, on_delete=models.CASCADE, related_name='budgets')
