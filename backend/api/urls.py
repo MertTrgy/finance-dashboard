@@ -13,6 +13,11 @@ from .pdf_view import export_pdf
 from .ai_views import ai_chat, ai_providers, ai_context
 from .receipt_views import scan_receipt, save_receipt, receipt_items
 
+from .market_views import (
+        market_overview, market_news, stock_quote,
+        spending_correlation, portfolio, portfolio_delete,
+    )
+
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')
 router.register(r'transactions', TransactionViewSet, basename='transaction')
@@ -47,9 +52,17 @@ urlpatterns = [
     # ── PDF Export ───────────────────────────────────────────
     path('export-pdf/', export_pdf, name='export_pdf'),
 
-     # ── Receipt ───────────────────────────────────────────
+    # ── Receipt ───────────────────────────────────────────
     path('receipt/scan/',  scan_receipt,  name='receipt_scan'),
     path('receipt/save/',  save_receipt,  name='receipt_save'),
     path('receipt/items/', receipt_items, name='receipt_items'),
+
+    # ── Market & Stock urls ───────────────────────────────────────────
+    path('market/overview/',     market_overview,      name='market_overview'),
+    path('market/news/',         market_news,          name='market_news'),
+    path('market/quote/',        stock_quote,          name='market_quote'),
+    path('market/correlation/',  spending_correlation, name='market_correlation'),
+    path('portfolio/',           portfolio,            name='portfolio'),
+    path('portfolio/<int:pk>/',  portfolio_delete,     name='portfolio_delete'),
 
 ]

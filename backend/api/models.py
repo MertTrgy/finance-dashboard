@@ -98,6 +98,35 @@ class ReceiptLineItem(models.Model):
     def __str__(self):
         return f'{self.name} x{self.quantity} = £{self.total_price}'
  
+class StockHolding(models.Model):
+    """
+    A stock position in the user's portfolio.
+    Current price and performance are fetched live from yfinance.
+
+    Examples:
+        ticker='AAPL', quantity=10, buy_price=150.00
+        ticker='^FTSE', quantity=0   # watchlist item (no shares owned)
+    """
+    user      = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='stock_holdings'
+    )
+    ticker    = models.CharField(max_length=20)    # e.g. "AAPL", "TSLA", "^FTSE"
+    name      = models.CharField(max_length=200)   # e.g. "Apple Inc." — stored on create
+    quantity  = models.DecimalField(
+        max_digits=12, decimal_places=4, default=0
+    )                                               # 0 = watchlist only
+    buy_price = models.DecimalField(
+        max_digits=12, decimal_places=4, null=True, blank=True
+    )                                               # price per share when bought
+    buy_date  = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'ticker')
+        ordering        = ['ticker']
+
+    def __str__(self):
+        return f'{self.user} — {self.ticker} x{self.quantity}'
     
 class Budget(models.Model):
     """Monthly spend limit per category per user."""

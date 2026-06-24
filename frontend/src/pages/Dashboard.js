@@ -13,6 +13,7 @@ import SummaryCards from '../components/SummaryCards';
 import SpendingChart from '../components/SpendingChart';
 import AIAssistant from '../components/AIAssistant';
 import ReceiptScanner from '../components/ReceiptScanner';
+import MarketWidget from '../components/MarketWidget';
 import api from '../services/api';
 import './Dashboard.css';
 
@@ -144,6 +145,7 @@ export default function Dashboard() {
           <Link to="/categories"  className="dash-nav-link">Categories</Link>
           <Link to="/recurring"   className="dash-nav-link">Recurring</Link>
           <Link to="/insights"    className="dash-nav-link">Insights</Link>
+          <Link to="/portfolio"   className="dash-nav-link">Portfolio</Link> 
           <Link to="/ai-settings" className="dash-nav-link">AI Settings</Link>
         </nav>
         <div className="dash-user">
@@ -199,43 +201,45 @@ export default function Dashboard() {
 
         <SummaryCards summary={summary} loading={sumLoading} />
 
-        <div className="dash-grid">
-          <ErrorBoundary>
-            <section className="dash-card">
-              <h2 className="card-title">Spending</h2>
-              <SpendingChart summary={summary} />
-            </section>
-          </ErrorBoundary>
+        <div className="dash-grid dash-grid--3">
+          
+          <section className="dash-card">
+            <h2 className="card-title">Spending</h2>
+            <SpendingChart summary={summary} />
+          </section>
 
-          <ErrorBoundary>
-            <section className="dash-card">
-              <div className="card-title-row">
-                <h2 className="card-title">Transactions</h2>
-                {transactions.length > 0 && (
-                  <span className="card-hint">Click a row to edit</span>
-                )}
-              </div>
+          <section className="dash-card">
+            <div className="card-title-row">
+              <h2 className="card-title">Transactions</h2>
+              {transactions.length > 0 && (
+                <span className="card-hint">Click a row to edit</span>
+              )}
+            </div>
 
-              {/* Search + filter bar */}
-              <TransactionFilters
-                categories={categories}
-                onChange={setFilters}
-              />
+            {/* Search + filter bar */}
+            <TransactionFilters
+              categories={categories}
+              onChange={setFilters}
+            />
 
-              <TransactionList
-                transactions={transactions}
-                loading={txLoading}
-                error={txError}
-                onEdit={openEdit}
-                onDelete={handleDelete}
-                anomalyIds={anomalyIds}
-              />
+            <TransactionList
+              transactions={transactions}
+              loading={txLoading}
+              error={txError}
+              onEdit={openEdit}
+              onDelete={handleDelete}
+              anomalyIds={anomalyIds}
+            />
 
-              {/* Pagination */}
-              <Pagination pagination={pagination} onPageChange={goToPage} />
-            </section>
-          </ErrorBoundary>
-        </div>
+            {/* Pagination */}
+            <Pagination pagination={pagination} onPageChange={goToPage} />
+          </section>
+
+        <ErrorBoundary>              
+          <MarketWidget />
+        </ErrorBoundary>
+      </div>
+
 
         {/* AI Assistant */}
         <ErrorBoundary>
@@ -257,3 +261,57 @@ export default function Dashboard() {
     </div>
   );
 }
+
+// ── Dashboard.js patches ───────────────────────────────────────────────────
+//
+// 1. Add import:
+//    
+//
+// 2. Add "Portfolio" to the nav:
+
+//
+// 3. Add MarketWidget to the dash-grid (makes it 3 columns):
+//    Replace your existing:
+//      <div className="dash-grid">
+//        <section>Spending chart</section>
+//        <section>Transactions</section>
+//      </div>
+//
+//    With:
+//      <div className="dash-grid dash-grid--3">
+//        <section className="dash-card">
+//          <h2 className="card-title">Spending</h2>
+//          <SpendingChart summary={summary} />
+//        </section>
+//
+//        <section className="dash-card">
+//          ...TransactionFilters, TransactionList, Pagination...
+//        </section>
+//
+//        <ErrorBoundary>              ← NEW third column
+//          <MarketWidget />
+//        </ErrorBoundary>
+//      </div>
+//
+// ── Dashboard.css patch ────────────────────────────────────────────────────
+//
+// Add this to Dashboard.css:
+//    .dash-grid--3 {
+//      grid-template-columns: 1fr 1.3fr 0.9fr;
+//    }
+//    @media (max-width: 1100px) {
+//      .dash-grid--3 { grid-template-columns: 1fr 1fr; }
+//    }
+//    @media (max-width: 700px) {
+//      .dash-grid--3 { grid-template-columns: 1fr; }
+//    }
+//
+// ── App.js patch ───────────────────────────────────────────────────────────
+//
+// 1. Add import:
+//    import Portfolio from './pages/Portfolio';
+//
+// 2. Add route:
+//    <Route path="/portfolio" element={
+//      <ProtectedRoute><Portfolio /></ProtectedRoute>
+//    }/>
