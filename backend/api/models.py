@@ -98,35 +98,57 @@ class ReceiptLineItem(models.Model):
     def __str__(self):
         return f'{self.name} x{self.quantity} = £{self.total_price}'
  
+
+# ── Replace StockHolding in api/models.py ────────────────────────────────────
+
 class StockHolding(models.Model):
     """
-    A stock position in the user's portfolio.
-    Current price and performance are fetched live from yfinance.
+    Portfolio position with split tracking.
 
-    Examples:
-        ticker='AAPL', quantity=10, buy_price=150.00
-        ticker='^FTSE', quantity=0   # watchlist item (no shares owned)
+    FIELDS EXPLAINED:
+        quantity          original shares purchased (e.g. 1 AMZN share)
+        buy_price         split-adjusted closing price on buy_date (e.g. $153 not $3,070)
+        buy_date          date of purchase (e.g. 2022-04-01)
+        split_factor      multiplier from all splits since buy_date (e.g. 20)
+        adjusted_quantity shares owned today = quantity × split_factor (e.g. 20)
+        original_currency exchange currency (USD, GBP, EUR...)
+
+    CALCULATIONS:
+        cost_basis    = buy_price × adjusted_quantity   (e.g. $153 × 20 = $3,060)
+        current_value = current_price × adjusted_quantity
+        gain          = current_value − cost_basis
     """
     user      = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='stock_holdings'
+        'auth.User', on_delete=models.CASCADE, related_name='stock_holdings'
     )
-    ticker    = models.CharField(max_length=20)    # e.g. "AAPL", "TSLA", "^FTSE"
-    name      = models.CharField(max_length=200)   # e.g. "Apple Inc." — stored on create
-    quantity  = models.DecimalField(
-        max_digits=12, decimal_places=4, default=0
-    )                                               # 0 = watchlist only
-    buy_price = models.DecimalField(
-        max_digits=12, decimal_places=4, null=True, blank=True
-    )                                               # price per share when bought
+    ticker    = models.CharField(max_length=20)
+    name      = models.CharField(max_length=200, blank=True)
+    quantity  = models.DecimalField(max_digits=12, decimal_places=6, default=0)
+    buy_price = models.DecimalField(max_digits=14, decimal_places=6, null=True, blank=True)
     buy_date  = models.DateField(null=True, blank=True)
+
+    split_factor      = models.DecimalField(max_digits=12, decimal_places=6, default=1)
+    adjusted_quantity = models.DecimalField(max_digits=12, decimal_places=6, default=0)
+    original_currency = models.CharField(max_length=3, default='USD')
+
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('user', 'ticker')
         ordering        = ['ticker']
 
     def __str__(self):
-        return f'{self.user} — {self.ticker} x{self.quantity}'
+        return f'{self.user} — {self.ticker}: {self.quantity} shares (×{self.split_factor} = {self.adjusted_quantity})'
+
+
+# ── After updating models.py, run: ───────────────────────────────────────────
+#
+#   python manage.py makemigrations api
+#   python manage.py migrate
+#
+# If you get an error about existing columns, run:
+#   python manage.py migrate --run-syncdb
     
 class Budget(models.Model):
     """Monthly spend limit per category per user."""

@@ -16,6 +16,7 @@ from .receipt_views import scan_receipt, save_receipt, receipt_items
 from .market_views import (
         market_overview, market_news, stock_quote,
         spending_correlation, portfolio, portfolio_delete,
+        historical_price_lookup, portfolio_refresh, ticker_search,  
     )
 
 router = DefaultRouter()
@@ -64,5 +65,8 @@ urlpatterns = [
     path('market/correlation/',  spending_correlation, name='market_correlation'),
     path('portfolio/',           portfolio,            name='portfolio'),
     path('portfolio/<int:pk>/',  portfolio_delete,     name='portfolio_delete'),
+    path('market/historical-price/', historical_price_lookup, name='market_hist_price'),
+    path('portfolio/refresh/',        portfolio_refresh,      name='portfolio_refresh'),
+    path('market/search/', ticker_search, name='market_search'),
 
 ]

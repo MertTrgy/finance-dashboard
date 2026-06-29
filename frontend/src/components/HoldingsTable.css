@@ -1,0 +1,172 @@
+.ht-wrap { overflow-x: auto; }
+
+.ht-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ht-table th {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: 0 0.625rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #f0ede8;
+  white-space: nowrap;
+}
+
+.ht-table td {
+  padding: 0.75rem 0.625rem;
+  border-bottom: 1px solid #f0ede8;
+  vertical-align: middle;
+}
+
+.ht-table tr:last-child td { border-bottom: none; }
+.ht-table tr:hover td { background: #fafaf8; }
+
+.ht-right { text-align: right !important; }
+.ht-mono  { font-variant-numeric: tabular-nums; }
+.ht-bold  { font-weight: 500; }
+
+.ht-up   { color: #15803d; font-weight: 500; }
+.ht-down { color: #b91c1c; font-weight: 500; }
+.ht-null { color: #ddd; }
+.ht-adj  { font-size: 0.625rem; color: #bbb; margin-left: 3px; }
+
+/* Stock column */
+.ht-stock { display: flex; flex-direction: column; gap: 2px; }
+.ht-ticker { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 600; color: #1a1a1a; }
+.ht-name   { font-size: 11px; color: #aaa; }
+.ht-date   { font-size: 10px; color: #ccc; }
+
+/* ── Shares column ── */
+.ht-shares {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 130px;
+}
+
+.ht-shares-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ht-shares-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ht-dot-original { background: #e2e0da; }
+.ht-dot-today    { background: #6366F1; }
+
+.ht-shares-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  width: 46px;
+  flex-shrink: 0;
+}
+
+.ht-shares-num {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #1a1a1a;
+  font-variant-numeric: tabular-nums;
+}
+
+.ht-shares-num-today {
+  color: #6366F1;
+  font-size: 13px;
+}
+
+.ht-shares-nosplit {
+  font-size: 10px;
+  color: #ccc;
+  margin-left: 2px;
+}
+
+/* Split arrow */
+.ht-split-arrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 13px;  /* align with dots */
+  margin: 1px 0;
+}
+
+.ht-split-line {
+  width: 1px;
+  height: 10px;
+  background: #e2e0da;
+  flex-shrink: 0;
+  margin-left: 3px;
+}
+
+.ht-split-badge {
+  font-size: 10px;
+  font-weight: 500;
+  color: #185fa5;
+  background: #e6f1fb;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* Gain column */
+.ht-gain { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+.ht-gain-pct { font-size: 10px; font-weight: 400; }
+
+/* Remove button */
+.ht-remove {
+  background: none;
+  border: none;
+  font-size: 0.7rem;
+  color: #ccc;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: color .15s;
+}
+.ht-remove:hover { color: #b91c1c; }
+
+/* Empty state */
+.ht-empty { text-align: center; padding: 2rem 0; }
+.ht-empty-text { font-size: 0.9375rem; color: #aaa; margin-bottom: 4px; }
+.ht-empty-sub  { font-size: 0.8125rem; color: #ccc; }
+
+/* Shares preview box CSS — goes in Portfolio.css additions */
+.pf-shares-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid #d1fae5;
+}
+
+.pf-shares-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pf-shares-label { font-size: 12px; color: #666; }
+.pf-shares-val   { font-size: 13px; font-weight: 500; color: #1a1a1a; font-variant-numeric: tabular-nums; }
+
+.pf-shares-split  { opacity: .7; }
+.pf-shares-today  { margin-top: 2px; }
+.pf-shares-factor { font-size: 11px; font-weight: 500; color: #185fa5; background: #e6f1fb; padding: 1px 7px; border-radius: 4px; }
+.pf-shares-highlight { color: #6366F1; font-size: 14px; }

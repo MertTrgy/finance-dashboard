@@ -1,0 +1,113 @@
+.ts-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.ts-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ts-input {
+  width: 100%;
+  padding-right: 2rem; /* room for spinner */
+}
+
+/* Spinning loader */
+.ts-spinner {
+  position: absolute;
+  right: 10px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #e2e0da;
+  border-top-color: #1a1a1a;
+  border-radius: 50%;
+  animation: ts-spin .7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes ts-spin { to { transform: rotate(360deg); } }
+
+/* Dropdown */
+.ts-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e2e0da;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  z-index: 1000;
+  list-style: none;
+  overflow: hidden;
+  animation: ts-drop .12s ease;
+}
+
+@keyframes ts-drop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Dropdown items */
+.ts-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background .1s;
+  border-bottom: 1px solid #f5f4f0;
+}
+.ts-item:last-child { border-bottom: none; }
+.ts-item:hover,
+.ts-item.highlighted { background: #f5f4f0; }
+
+.ts-item-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.ts-ticker {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+  min-width: 60px;
+}
+
+.ts-type {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.ts-item-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  min-width: 0;
+}
+
+.ts-name {
+  font-size: 12.5px;
+  color: #444;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.ts-exch {
+  font-size: 10px;
+  color: #bbb;
+}
